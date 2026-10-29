@@ -73,9 +73,16 @@ Hardware/runtime: Intel Core i5-11400F at 2.60 GHz, 12 logical processors, Windo
 
 A Minecraft client was being launched to its title menu on the same machine during the headless run, so CPU, memory, disk and GPU-related host activity may have interfered. No clients were connected to the test server. The entity query cap means a crowded scene may repeatedly select a subset of nearby entities; the fixture counts are total actual cows, not a promise that every cow receives wind each tick.
 
-GitHub Actions now defines Java 21 build, unit-test and headless integration jobs and uploads the JARs and test reports. **Remote CI execution remains pending** until a push runs that workflow. Manual checks listed above remain unverified unless separately recorded.
+GitHub Actions now defines Java 21 build, unit-test and headless integration jobs and uploads the JARs and test reports. The first clean remote run passed; see the revision record below. Manual checks listed above remain unverified unless separately recorded.
 
 ### Client launch smoke check
 
 The development client loaded the mod and resources, reached the title screen, and entered a new creative superflat singleplayer world. The user stopped Computer Use with Escape before receiver or funnel inspection, and no subsequent UI inputs were sent. This confirms client startup and world entry only. HUD/funnel appearance, live snapshot display, sound and survival behavior remain unverified.
+
+
+### Final revision and clean CI
+
+A final local build plus all 18 JUnit tests and the headless fixture passed again after collection-before-filtering bounded the spatial candidate query. The rerun is recorded in [BENCHMARK_FINAL_2026-10-28.md](BENCHMARK_FINAL_2026-10-28.md): three storms/64 actual cows p95 0.0304ms, three/256 p95 0.0123ms; these remain hot-cache adapter-only timings. The original matrix/outlier is retained above.
+
+The initial repository revision 0084c83 also passed a clean Ubuntu/Java21 [GitHub Actions run](https://github.com/Saltycrook1/mod/actions/runs/40803112841), including wrapper verification, compilation, all 18 unit tests, headless server integration, and artifact/report upload. Client presentation and real two-client checks remain pending.
 

@@ -4,10 +4,10 @@ Target: **0.1.0-alpha.1**, Minecraft 1.21.1 / Fabric / Java 21. Keep unverified 
 
 ## Build and automated evidence
 
-- [ ] From a clean checkout, run `./gradlew --no-daemon clean build` and `./gradlew --no-daemon runGametest` with JDK 21.
-- [ ] Record commit, runtime/hardware, actual test counts and failures in [Validation](VALIDATION.md).
-- [ ] Retain JUnit/GameTest reports and the generated adapter benchmark, including storm/entity counts and limitations.
-- [ ] Verify the release JAR excludes the development test mod and contains content resources, license and correct metadata.
+- [x] From a clean checkout, run `./gradlew --no-daemon clean build` and `./gradlew --no-daemon runGametest` with JDK 21.
+- [x] Record commit, runtime/hardware, actual test counts and failures in [Validation](VALIDATION.md).
+- [x] Retain JUnit/GameTest reports and the generated adapter benchmark, including storm/entity counts and limitations.
+- [x] Verify the release JAR excludes the development test mod and contains content resources, license and correct metadata.
 - [ ] Confirm normal dedicated-server startup and a full stop/restart with live fronts; compare resumed age, course, removal counts and protected chunks.
 
 ## Gameplay and presentation
@@ -29,7 +29,7 @@ Target: **0.1.0-alpha.1**, Minecraft 1.21.1 / Fabric / Java 21. Keep unverified 
 ## Packaging and publication
 
 - [ ] Copy actual results into the release notes and list unresolved manual checks prominently.
-- [ ] Confirm dependency versions, install/run instructions, asset provenance and licensing notices.
+- [x] Confirm dependency versions, install/run instructions, asset provenance and licensing notices.
 - [ ] Publish only the remapped mod JAR and intended sources/documentation; exclude caches, test worlds and local configuration.
 - [ ] Retain the alpha label until multiplayer, presentation, ordinary restart and sustained-load checks pass. Do not claim comparative performance without a comparable competitor benchmark.
 

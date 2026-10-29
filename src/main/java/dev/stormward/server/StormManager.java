@@ -83,10 +83,14 @@ public final class StormManager {
                 double range = storm.radius() * 2;
                 Box box = new Box(storm.x() - range, y - 8, storm.z() - range, storm.x() + range, y + 96, storm.z() + range);
                 List<LivingEntity> entities = new ArrayList<>(quota);
+                // Collect first, then filter: rejected creative/spectator entities must not
+                // make the engine enumerate an unlimited number of additional candidates.
                 world.collectEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), box,
-                    e -> e.isAlive() && !e.isSpectator() && (!(e instanceof PlayerEntity p) || (config.affectPlayers && !p.isCreative())), entities, quota);
+                    e -> true, entities, quota);
                 left -= entities.size(); runtime.entities += entities.size();
                 for (LivingEntity entity : entities) {
+                    if (!entity.isAlive() || entity.isSpectator()
+                        || (entity instanceof PlayerEntity p && (!config.affectPlayers || p.isCreative()))) continue;
                     if (!world.getWorldBorder().contains(entity.getBlockPos())) continue;
                     Wind.Force force = Wind.sample(storm, entity.getX(), entity.getY(), entity.getZ(), y, exposure(world, entity));
                     double factor = config.windMultiplier * (entity.isSneaking() ? 0.45 : 1);
