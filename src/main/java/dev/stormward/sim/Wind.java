@@ -28,7 +28,9 @@ public final class Wind {
         double x = (nx * 0.065 - nz * 0.085) * power;
         double z = (nz * 0.065 + nx * 0.085) * power;
         double y = storm.stage() == StormStage.TORNADO
-                ? 0.07 * power * Math.max(0, 1 - Math.max(0, height) / 96) : 0;
+                // Normal living-entity gravity is about 0.08 blocks/tick². A mature
+                // strength-one core must overcome it, while shelter/falloff still apply.
+                ? 0.16 * power * Math.max(0, 1 - Math.max(0, height) / 96) : 0;
         double length = Math.sqrt(x * x + y * y + z * z);
         if (length > MAX_ACCELERATION) {
             double multiplier = MAX_ACCELERATION / length;

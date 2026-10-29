@@ -5,6 +5,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WindTest {
+    @Test void defaultStrengthCoreOvercomesGravityButShelterPreventsLift() {
+        Storm storm = new Storm(new Storm.State(new UUID(3, 4), 0, 0, 0, 0, 32, 1, 3400, 1));
+        assertTrue(Wind.sample(storm, 0, 0, 0, 0, 1).y() > 0.08);
+        assertEquals(0, Wind.sample(storm, 0, 0, 0, 0, 0).y());
+        assertTrue(Wind.sample(storm, 60, 0, 0, 0, 1).y() < 0.08);
+    }
     private Storm tornado() {
         return new Storm(new Storm.State(new UUID(1, 2), 0, 0, .04, .02, 32, 5, 3400, 1));
     }

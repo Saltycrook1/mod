@@ -64,6 +64,7 @@ public final class StormwardGameTests implements FabricGameTest {
             siren(context, world, origin);
             boundedQuery(context, world, origin, cows);
             zeroForcePreservesVelocity(context, world, origin, config);
+            defaultStormLiftsRealCow(context, world, origin);
             unloadedFreeze(context, world, origin);
             benchmark(context, world, origin, cows);
             Stormward.LOGGER.info("STORMWARD_INTEGRATION_PASS: NBT, packet bounds/roundtrip, shelter, destruction, siren redstone, bounded query, unloaded pause, benchmarks");
@@ -82,6 +83,35 @@ public final class StormwardGameTests implements FabricGameTest {
     private static Storm tornado(BlockPos at) {
         return new Storm(new Storm.State(UUID.randomUUID(), at.getX() + 0.5, at.getZ() + 0.5,
                 0, 0, 32, 2.5, 3200, 1));
+    }
+
+    private static void defaultStormLiftsRealCow(TestContext c, ServerWorld world, BlockPos origin) {
+        BlockPos at = origin.up(24);
+        for (int x = -8; x <= 8; x++) for (int z = -8; z <= 8; z++) {
+            c.assertTrue(StormManager.loaded(world, at.getX() + x, at.getZ() + z), "Physics fixture must be loaded");
+            for (int y = 0; y <= 16; y++) world.setBlockState(at.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
+            world.setBlockState(at.add(x, -1, z), Blocks.STONE.getDefaultState(), 2);
+        }
+        StormSavedData data = StormSavedData.get(world);
+        data.storms.clear();
+        data.storms.add(new Storm(new Storm.State(UUID.randomUUID(), at.getX() + .5, at.getZ() + .5, 0, 0, 32, 1, 3400, 1)));
+        CowEntity cow = EntityType.COW.create(world);
+        if (cow == null) throw new IllegalStateException("Cow factory failed");
+        cow.setAiDisabled(false);
+        cow.refreshPositionAndAngles(at.getX() + .5, at.getY(), at.getZ() + .5, 0, 0);
+        world.spawnEntity(cow);
+        double start = cow.getY();
+        try {
+            c.assertTrue(StormManager.exposure(world, cow) > .99, "Lift fixture must be exposed");
+            // Run real Minecraft living-entity travel/gravity, then the server wind adapter.
+            // Unlike the performance fixtures, this cow has gravity enabled.
+            for (int tick = 0; tick < 40; tick++) {
+                cow.tick(); StormManager.tick(world);
+                if (tick == 0) Stormward.LOGGER.info("STORMWARD_PHYSICS first velocity={} ground={} stats={}", cow.getVelocity(), world.getTopY(net.minecraft.world.Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, at.getX(), at.getZ()), StormManager.stats(world));
+            }
+            Stormward.LOGGER.info("STORMWARD_PHYSICS gravity-enabled strength-one cow startY={} endY={}", start, cow.getY());
+            c.assertTrue(cow.getY() > start + 1, "Default mature tornado must physically lift an exposed gravity-enabled cow");
+        } finally { cow.discard(); data.storms.clear(); }
     }
 
     private static void persistence(TestContext c, ServerWorld world, BlockPos at) {

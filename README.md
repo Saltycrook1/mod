@@ -2,14 +2,14 @@
 
 **Read the sky. Find cover. Survive the front.**
 
-Stormward `0.1.0-alpha.1` is a tornado-first survival mod for **Minecraft Java 1.21.1 / Fabric / Java 21**. Local storms progress through warnings into a moving funnel. A handheld receiver, redstone sirens and reinforced shelter give players practical counterplay. Destruction is **off by default**.
+Stormward `0.1.0-alpha.2` is a tornado-first survival mod for **Minecraft Java 1.21.1 / Fabric / Java 21**. Local storms progress through warnings into a moving funnel. A handheld receiver, redstone sirens and reinforced shelter give players practical counterplay. Destruction is **off by default**.
 
 This is an alpha. Client presentation, real two-client synchronization and sustained gameplay need the manual checks in [Validation](docs/VALIDATION.md). A compiled effect is not a verified aesthetic result. There are no popularity guarantees or claims of outperforming another mod.
 
 ## Install
 
 1. Install [Fabric Loader](https://fabricmc.net/use/installer/) for Minecraft **1.21.1**, using Java 21.
-2. Put `stormward-0.1.0-alpha.1.jar` and **Fabric API for 1.21.1** in the instance's `mods/` directory. Use the same mod versions on clients and the dedicated server.
+2. Put `stormward-0.1.0-alpha.2.jar` and **Fabric API for 1.21.1** in the instance's `mods/` directory. Use the same mod versions on clients and the dedicated server.
 3. The pinned baseline is Loader **0.20.1**, Fabric API **0.116.7+1.21.1**. Newer dependency versions are not automatically validated. Forge, NeoForge, Bedrock and other Minecraft versions are unsupported.
 
 ## Play
@@ -77,7 +77,7 @@ cd mod
 .\gradlew.bat runClient
 ```
 
-On Linux/macOS, use `./gradlew` in place of `.\gradlew.bat`. The distributable is `build/libs/stormward-0.1.0-alpha.1.jar`; the `-sources.jar` is for development. To run a development dedicated server, use `runServer`, review the generated Minecraft EULA in `run/eula.txt`, accept it if you agree, then run again. For ordinary hosting, use a Fabric 1.21.1 server and put the mod/Fabric API in its `mods/` directory.
+On Linux/macOS, use `./gradlew` in place of `.\gradlew.bat`. The distributable is `build/libs/stormward-0.1.0-alpha.2.jar`; the `-sources.jar` is for development. To run a development dedicated server, use `runServer`, review the generated Minecraft EULA in `run/eula.txt`, accept it if you agree, then run again. For ordinary hosting, use a Fabric 1.21.1 server and put the mod/Fabric API in its `mods/` directory.
 
 The build pins Gradle **8.14.3**, Loom **1.11.8**, Yarn **1.21.1+build.3**, Loader **0.20.1** and Fabric API **0.116.7+1.21.1**. Fabric's [1.21.1 setup guide](https://docs.fabricmc.net/1.21.1/develop/getting-started/setting-up-a-development-environment) requires JDK 21. This target uses an established Fabric API and Java 21 toolchain; it is not the newest Minecraft release. API choices and research are linked in [Design](docs/DESIGN.md).
 
