@@ -1,0 +1,49 @@
+name: Build and headless tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - name: Verify the pinned Gradle 8.14.3 wrapper
+        run: echo '7d3a4ac4de1c32b59bc6a4eb8ecb8e612ccd0cf1ae1e99f66902da64df296172  gradle/wrapper/gradle-wrapper.jar' | sha256sum --check --strict
+      - name: Build and run JUnit
+        run: bash ./gradlew --no-daemon build
+      - name: Run dedicated headless integration
+        run: bash ./gradlew --no-daemon runGametest
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stormward-jars
+          path: build/libs/*.jar
+          if-no-files-found: error
+      - name: Upload validation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports
+          path: |
+            build/reports/tests/
+            build/test-results/
+            build/gametest-results.xml
+            build/adapter-benchmark.md
+            build/gametest/logs/latest.log
+          if-no-files-found: warn

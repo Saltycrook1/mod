@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "stormward_test",
+  "version": "1.0.0",
+  "name": "Stormward headless tests",
+  "environment": "server",
+  "entrypoints": {
+    "fabric-gametest": ["dev.stormward.test.StormwardGameTests"]
+  },
+  "depends": {"stormward": "*", "fabric-gametest-api-v1": "*"}
+}

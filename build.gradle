@@ -1,0 +1,65 @@
+plugins {
+    id 'fabric-loom' version '1.11.8'
+    id 'maven-publish'
+}
+version = project.mod_version
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+repositories { mavenCentral() }
+loom {
+    splitEnvironmentSourceSets()
+    mods {
+        stormward {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+    runs { server { programArg 'nogui' } }
+}
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand 'version': project.version }
+}
+tasks.withType(JavaCompile).configureEach { options.release = 21 }
+java { withSourcesJar(); sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
+test { useJUnitPlatform() }
+tasks.register('simulationBenchmark', JavaExec) {
+    group = 'verification'
+    description = 'Runs the synthetic pure-Java simulation kernel microbenchmark (not Minecraft TPS).'
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.stormward.sim.SimulationBenchmark'
+    jvmArgs '-Xms256m', '-Xmx256m'
+}
+
+// This mod is loaded only by the headless integration run, never in release jars.
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath + sourceSets.main.runtimeClasspath
+    }
+}
+loom {
+    mods { stormward_test { sourceSet sourceSets.gametest } }
+    runs {
+        gametest {
+            server()
+            name 'Stormward headless integration tests'
+            source sourceSets.gametest
+            vmArg '-Dfabric-api.gametest'
+            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.file('gametest-results.xml').get().asFile}"
+            runDir 'build/gametest'
+        }
+    }
+}
+tasks.withType(AbstractArchiveTask).configureEach { preserveFileTimestamps = false; reproducibleFileOrder = true }
+jar { from('LICENSE') { rename { "${it}_${project.base.archivesName.get()}" } } }

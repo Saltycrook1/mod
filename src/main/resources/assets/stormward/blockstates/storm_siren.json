@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "stormward:block/storm_siren"
+    },
+    "powered=true": {
+      "model": "stormward:block/storm_siren_active"
+    }
+  }
+}

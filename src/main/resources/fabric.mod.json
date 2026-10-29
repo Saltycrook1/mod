@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "stormward",
+  "version": "${version}",
+  "name": "Stormward",
+  "description": "Read the sky. Find cover. Survive the front. Forecast-driven tornado survival with bounded simulation.",
+  "authors": ["Stormward contributors"],
+  "contact": {"sources": "https://github.com/Saltycrook1/mod", "issues": "https://github.com/Saltycrook1/mod/issues"},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {"main": ["dev.stormward.Stormward"], "client": ["dev.stormward.client.StormwardClient"]},
+  "depends": {"fabricloader": ">=0.20.1", "minecraft": "1.21.1", "java": ">=21", "fabric-api": ">=0.116.7"}
+}
